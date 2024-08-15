@@ -1,0 +1,78 @@
+[
+{
+	"uri": "/vi/1-introduction/",
+	"title": "Giới thiệu",
+	"tags": [],
+	"description": "",
+	"content": "Nội dung\nAmazon CloudFront Amazon Simple Storage Service (Amazon S3) Amazon Elastic Transcoder Amazon CloudFront Amazon CloudFront là một dịch vụ mạng phân phối nội dung (CDN - Content Delivery Network) được cung cấp bởi Amazon Web Service (AWS). Dịch vụ này giúp phân phối dữ liệu, video, ứng dụng và API một cách an toàn cho khách hàng trên toàn cầu với độ trễ thấp và tốc độ truyền cao. CloudFront sử dụng mạng lưới các máy chủ phân tán trên khắp thế giới để tối ưu hóa việc truyền tải nội dung giúp cải thiện hiệu suất và trải nghiệm người dùng.\nAmazon Simple Storage Service (Amazon S3) Amazon S3 là một dịch vụ lưu trữ đối tượng (object storage) được cung cấp bởi AWS. Dịch vụ này cung cấp khả năng lưu trữ dữ liệu không giới hạn với độ bền cao, khả năng mở rộng và bảo mật mạnh mẽ. Trong Amazon S3, tất cả dữ liệu sẽ được lưu trữ trong các S3 bucket, nơi giúp dễ dàng quản lý, truy xuất và bảo mật dữ liệu trên nền tảng Cloud.\nAmazon Elastic Transcoder Amazon Elastic Transcoder là một dịch vụ chuyển đổi định dạng các phương tiện truyền thông được cung cấp bởi AWS. Dịch vụ này cho phép người dùng dễ dàng chuyển đổi các tệp video từ định dạng này sang định dạng khác, giúp video đó có thể phát trên nhiều loại thiết bị khác nhau với các yêu cầu về độ phân giải và chất lượng khác nhau.\n"
+},
+{
+	"uri": "/vi/",
+	"title": "Phân Phối Trực Tuyến Video Bằng Amazon Cloudfront",
+	"tags": [],
+	"description": "",
+	"content": "Phân phối trực tuyến video bằng amazon cloudfront Tổng quan Trong workshop này, chúng ta sẽ sử dụng Amazon CloudFront để phân phối nội dung của một video đến thiết bị người dùng bằng cách sử dụng giao thức HTTP Live Streaming (HLS). Video này có thể được phát trên bất kỳ trình duyệt nào hỗ trợ giao thức HLS. Amazon Elastic Transcoder sẽ đảm nhận vai trò chuyển đổi video gốc thành định dạng phù hợp để phân phối đến người dùng, ở đây là HLS.\nSau khi hoàn thành workshop, kiến trúc có được như sau: Mô tả kiến trúc Kiến trúc của workshop được xây dựng từ ba dịch vụ của AWS là Amazon CloudFront, Amazon Simple Storage Service và Amazon Elastic Transcoder:\nS3 bucket input lưu trữ video gốc. Amazon Elastic Transcoder đóng vai trò chuyển đổi video thành định dạng HLS. Video sau khi được chuyển đổi định dạng sẽ được lưu trữ tại S3 bucket output. Amazon CloudFront đóng vai trò phân phối video output đến thiết bị của người dùng. Nội dung chính Giới thiệu Tạo S3 bucket và tải lên video đầu vào Tạo Amazon CloudFront Distribution Tạo Amazon Elastic Transcoder Pipeline Kiểm tra kết quả Dọn dẹp tài nguyên "
+},
+{
+	"uri": "/vi/4-create-amazon-elastic-transcoder-pipeline/1-create-pipeline/",
+	"title": "Tạo Pipeline",
+	"tags": [],
+	"description": "",
+	"content": "Tạo Pipeline Truy cập giao diện AWS Management Console\nTìm Elastic Transcoder Chọn Elastic Transcoder Trong giao diện Elastic Transcoder\nChọn Create a new Pipeline Thực hiện tạo Pipeline\nTrong phần Create New Pipeline: Pipeline Name chọn InputPipeline Input Bucket là bucket-input-ws đã tạo ở phần trước IAM Role chọn Create console default role Trong phần Configuration for Amazon S3 Bucket for Transcoded Files and Playlists: Bucket là bucket-input-ws đã tạo ở phần trước Storage class chọn Standard Trong phần Configuration for Amazon S3 Bucket for Thumbnails: Bucket là bucket-input-ws đã tạo ở phần trước Storage class chọn Reduced Redundancy Các phần còn lại để mặc định Chọn Create Pipeline Tạo Pipeline thành công "
+},
+{
+	"uri": "/vi/4-create-amazon-elastic-transcoder-pipeline/2-create-job/",
+	"title": "Tạo Job",
+	"tags": [],
+	"description": "",
+	"content": "Nội dung\nTạo Job Cấu hình Output Details Cấu hình Playlist Tạo Job Truy cập giao diện Elastic Transcoder\nChọn Job Chọn Create New Job Thực hiện tạo Job\nTrong phần Create a New Transcoding Job: Pipeline chọn InputPipeline Output Key Prefix nhập output/ Trong phần Input Details: Input Key chọn video đầu vào Những phần còn lại để giá trị mặc định Cấu hình Output Details Các cấu hình trong phần này xác định số lượng tệp đầu ra (tốc độ bit) được tạo ra. Trong bản workshop này, ta sẽ cấu hình ba tệp đầu ra với ba tốc độ bit riêng biệt: 2 Mbps, 1,5 Mbps và 1 Mbps.\nTệp đầu ra 1: Preset chọn System preset: HLS 2M Segment Duration nhập 10 (là giá trị mặc định đối với HLS) Output Key nhập HLS20M Các giá trị còn lại để mặc định Chọn Add Another Output Tệp đầu ra 2: Preset chọn System preset: HLS 1.5M Segment Duration nhập 10 Output Key nhập HLS15M Các giá trị còn lại để mặc định Chọn Add Another Output Tệp đầu ra 3: Preset chọn System preset: HLS 1M Segment Duration nhập 10 Output Key nhập HLS10M Các giá trị còn lại để mặc định Cấu hình Playlist Một Playlist kết hợp tất cả các Playlist có tốc độ bit riêng lẻ và cung cấp một URL duy nhất để các thiết bị của người dùng có thể phát lại luồng đầu ra.\nTrong phần Playlists (Adaptive Streaming): Chọn Add Playlist Thực hiện cấu hình Playlist Master Playlist Name nhập primary Playlist Format chọn HLSv3 Outputs in Master Playlist chọn ba tệp đầu ra đã tạo ở phần trước Chọn Create New Job Quá trình chuyển đổi định dạng thường mất vài phút. Khi status chuyển sang Complete có nghĩa là việc chuyển đổi đã thành công. "
+},
+{
+	"uri": "/vi/2-create-s3-bucket-and-upload-input-video/",
+	"title": "Tạo S3 bucket và tải lên video đầu vào",
+	"tags": [],
+	"description": "",
+	"content": "Nội dung\nTạo S3 Bucket Điều chỉnh policy của bucket Tạo thư mục input chứa video đầu vào Tải lên video đầu vào Tạo S3 Bucket Trong phần này, chúng ta sẽ tạo một S3 bucket nhằm lưu trữ video gốc, xem như bucket này là bucket input.\nTruy cập giao diện AWS Management Console\nTìm S3 Chọn S3 Trong thanh bên trái của giao diện Amazon S3\nChọn Buckets Chọn Create bucket Thực hiện tạo bucket\nTrong phần General configuration: Bucket type chọn General purpose Bucket name nhập bucket-input-ws Bỏ chọn Block all public access trong phần Block Public Access settings for this bucket Các giá trị còn lại để mặc định Chọn Create bucket Tạo bucket thành công Điều chỉnh policy của bucket Điều chỉnh policy cho phép bất kỳ ai cũng có thể tải về các đối tượng thuộc bucket.\nTruy cập giao diện S3 bucket-input-ws\nChọn mục Permissions Chọn Edit Bucket policy Chọn Policy generator Trong giao diện AWS Policy Generator\nPolicy Type chọn S3 Bucket Policy Effect chọn Allow Principal nhập * (quyền được cấp phép cho bất kỳ ai) Actions chọn GetObject Amazon Resource Name (ARN) xem trong mục properties của giao diện bucket Sao chép ARN và dán vào phần Amazon Resource Name (ARN) Chọn Add Statement Chọn Generate Policy Sao chép Policy vừa tạo dán vào phần Edit bucket policy Tạo thư mục input chứa video đầu vào Trong giao diện bucket\nChọn Create folder Thực hiện tạo thư mục\nFolder name nhập input Chọn Create folder Tạo thư mục thành công Tải lên video đầu vào Trong thư mục input\nChọn Upload Chọn Add files Tải lên video đầu vào từ máy tính của bạn Chọn Upload Tải lên video thành công "
+},
+{
+	"uri": "/vi/3-create-amazon-cloudfront-distribution/",
+	"title": "Tạo Amazon CloudFront Distribution",
+	"tags": [],
+	"description": "",
+	"content": "Tạo Amazon CloudFront Distribution Truy cập giao diện AWS Management Console Tìm CloudFront Chọn CloudFront Trong giao diện CloudFront Chọn Create a CloudFront distribution Thực hiện tạo CloudFront distribution Trong phần Origin: Origin domain chọn bucket-input-ws đã tạo ở phần trước Chuyển đến phần Web Application Firewall (WAF) Chọn Do not enable security protections (Vì trong phạm vi bài workshop không cần) Các giá trị còn lại để mặc định Chọn Create distribution Tạo CloudFront distribution thành công "
+},
+{
+	"uri": "/vi/4-create-amazon-elastic-transcoder-pipeline/",
+	"title": "Tạo Amazon Elastic Transcoder Pipeline",
+	"tags": [],
+	"description": "",
+	"content": "Tổng quan Amazon Elastic Transcoder là một dịch vụ cho phép chuyển đổi các phương tiện kỹ thuật số được lưu trữ trong Amazon S3 thành định dạng cần thiết cho các thiết bị phát lại của người dùng.\nElastic Transcoder có ba thành phần:\nPipeline là các hàng đợi quản lý các công việc chuyển đổi định dạng. Elastic Transcoder bắt đầu xử lý các công việc theo thứ tự mà chúng được thêm vào một pipeline. Thông thường, cần tạo ít nhất hai pipeline, một cho các công việc có mức độ ưu tiên tiêu chuẩn và một cho các công việc có mức độ ưu tiên cao. Hầu hết các công việc sẽ được đưa vào pipeline ưu tiên tiêu chuẩn, chỉ sử dụng pipeline ưu tiên cao khi cần chuyển đổi định dạng ngay lập tức.\nJob xác định các cài đặt không có trong preset, chẳng hạn như tệp cần chuyển đổi định dạng và có cần tạo thumbnails hay không. Mỗi job chuyển đổi một tệp thành một định dạng khác. Khi tạo một job, Elastic Transcoder sẽ thêm nó vào pipeline được chỉ định. Nếu trong pipeline đã có các job khác, job mới sẽ phải đợi và bắt đầu xử lý khi có tài nguyên khả dụng.\nPreset là các template xác định hầu hết các cài đặt cho tệp được chuyển đổi định dạng. Elastic Transcoder bao gồm một số preset mặc định cho các định dạng phổ biến. Người dùng có thể tạo các preset riêng của mình. Khi tạo một job cần chỉ định preset nào sẽ được sử dụng.\nNội dung Tạo Pipeline Tạo Job "
+},
+{
+	"uri": "/vi/5-check-the-results/",
+	"title": "Kiểm tra kết quả",
+	"tags": [],
+	"description": "",
+	"content": "Nội dung\nKiểm tra S3 bucket Xem video đầu ra bằng thiết bị di động Kết quả Kiểm tra S3 bucket Khi truy cập vào giao diện S3 bucket, ta thấy thư mục output chứa các tệp của video đầu ra Kiểm tra thư mục output, ta thấy có chứa các tệp đầu ra với tốc độ bit khác nhau và Playlist tương ứng với từng tốc độ bit Playlist primary.m3u8 chứa video đầu ra có thể xem được bằng thiết bị của người dùng Xem video đầu ra bằng thiết bị di động URL để truy cập vào Amazon CloudFront bao gồm hai phần:\nTên miền Amazon CloudFront Đường dẫn Playlist trong S3 bucket Tên miền Amazon CloudFront\nTruy cập giao diện Amazon CloudFront Chọn Distribution đã tạo ở phần trước và sao chép Distribution domain name trong mục General Đường dẫn Playlist trong S3 bucket\nTruy cập giao diện Amazon S3 Chọn bucket đã tạo ở phần trước Chọn thư mục output Chọn Playlist primary.m3u8 Thêm /output/primary.m3u8 vào sau Distribution domain name đã có ở phần trước và sử dụng URL này truy cập CloudFront để xem video đầu ra trên thiết bị di động.\nKết quả Như vậy, chúng ta đã thành công trong việc sử dụng Amazon CloudFront để phân phối nội dung của một video đến thiết bị người dùng bằng cách sử dụng dịch vụ Amazon Elastic Transcoder để chuyển đổi video gốc thành định dạng phù hợp với thiết bị.\n"
+},
+{
+	"uri": "/vi/6-resource-cleanup/",
+	"title": "Dọn dẹp tài nguyên",
+	"tags": [],
+	"description": "",
+	"content": "Dọn dẹp tài nguyên Xóa Elastic Transcoder Pipeline\nTruy cập giao diện Elastic Transcoder Chọn InputPipeline Chọn Remove Chọn Yes Xóa CloudFront Distribution\nTruy cập giao diện CloudFront Chọn Distribution đã tạo Chọn Disable Chọn Delete Xóa S3 bucket\nTruy cập giao diện Amazon S3 Chọn bucket đã tạo Chọn Empty Chọn Delete "
+},
+{
+	"uri": "/vi/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "/vi/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]
